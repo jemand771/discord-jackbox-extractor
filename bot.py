@@ -98,11 +98,10 @@ async def on_raw_reaction_add(payload: discord.raw_models.RawReactionActionEvent
             await add_reaction_controls(dm_msg)
     # TODO lock emoji
     else:
-        print("unknown reaction")
+        print("warning: unknown reaction")
 
 
 async def add_reaction_controls(message):
-    print("adding reactions")
     for reaction in (EMOJI.RERUN, EMOJI.DELETE, EMOJI.LETTER):
         await message.add_reaction(reaction)
 
@@ -128,10 +127,8 @@ async def load_and_send(url, channel, author_id):
     wait_msg = await channel.send("downloading game data, hang on!")
     try:
         loader = await asyncify(lambda: ContentLoader(url))
-        # embeds = await asyncify(loader.get_messages)
+        embeds = await asyncify(loader.get_messages)
         await asyncify(loader.driver.quit)
-
-        embeds = [{"embed": discord.Embed(title="hello world", description="embed " + str(i))} for i in range(2)]
         await wait_msg.delete()
         for embed in embeds:
             await channel.send(**embed)
@@ -151,7 +148,6 @@ async def load_and_send(url, channel, author_id):
     finally:
         summary.set_footer(text=f"Query time: {str(round(time.time() - start_time, 3))} seconds")
         summary_msg = await channel.send(embed=summary)
-        print(type(summary_msg))
         await add_reaction_controls(summary_msg)
 
 
