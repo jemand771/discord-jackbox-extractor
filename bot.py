@@ -53,7 +53,9 @@ async def asyncify(func):
 @client.event
 async def on_ready():
     print('We have logged in as {0.user} - birthday edition'.format(client))
-    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Jackbox results"))
+    await client.change_presence(
+            activity=discord.Activity(type=discord.ActivityType.playing, name="Happy birthday Jani!")
+    )
     send_birthday_message.start()
 
 
