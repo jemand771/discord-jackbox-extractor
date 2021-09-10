@@ -1,11 +1,13 @@
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 import os
 import re
 import time
 from types import SimpleNamespace
 
 import discord
+from discord.ext import tasks
 from selenium.common.exceptions import TimeoutException
 
 from jackbox_scraper import ContentLoader
@@ -24,6 +26,25 @@ TEXT_REQUESTER = "Requested by"
 TEXT_GAME_LINK = "Game id"
 
 
+BIRTHDAY_RAN = False
+
+
+@tasks.loop(seconds=5)
+async def send_birthday_message():
+    now = datetime.utcnow()
+    global BIRTHDAY_RAN
+    if not BIRTHDAY_RAN and now.minute == 0 and now.hour == 22 and now.day == 10 and now.month == 9:
+        channel = await client.fetch_channel(774005317083332680)
+        await channel.send("Happy birthday <@131498471080460288> :partying_face: <:gaybill:837775959658201098>")
+        await channel.send("https://giphy.com/gifs/reaction-cute-party-4QFdKexMLIA2okeecG")
+        await channel.send("<:janiuff:880910588790849596> <:invjani:840199254362423366> <:janiowo:840546727324549130>")
+        await client.change_presence(
+            activity=discord.Activity(type=discord.ActivityType.playing, name="Happy birthday Jani!")
+        )
+        print("executed", now)
+        BIRTHDAY_RAN = True
+
+
 async def asyncify(func):
     return await asyncio.get_event_loop().run_in_executor(
         ThreadPoolExecutor(), func)
@@ -31,8 +52,9 @@ async def asyncify(func):
 
 @client.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print('We have logged in as {0.user} - birthday edition'.format(client))
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Jackbox results"))
+    send_birthday_message.start()
 
 
 @client.event

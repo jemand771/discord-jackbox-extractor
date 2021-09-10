@@ -118,6 +118,9 @@ class ContentLoader:
         "quiplash3Game": GameLoaderQuiplash3,
         "STIGame": GameLoaderSTI
         # TODO implement more games
+        # trivia murder party 2
+        # champd up
+        # braketeering
         # STI auto-replaces .png with .gif after a couple of seconds, 1_1 is always extended by default
         #     maybe just click all down facing arrows?
         # bracketeering also replaces png with gif, but not always? -> investigate further
